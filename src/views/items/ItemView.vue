@@ -12,13 +12,15 @@
   </div>
   <div v-else class="mt-8 p-4">
     <h1 class="text-3xl mt-4">{{ item.label }}</h1>
-    <div class="text-left my-4">
-      <label for="label" class="font-bold mr-2">Item:</label>
-      <input type="text" name="label" id="item-label" v-model="item.label"  class="border-2 rounded w-full"/>
-    </div>
+    <text-field label="Item" v-model="item.label" name="item" inputId="item-label" />
     <div class="text-left my-4">
       <label for="description" class="font-bold">¿Que revisar?</label>
-      <textarea name="description" id="item-description" cols="30" rows="3" class="border-2 rounded w-full" v-model="item.description"></textarea>
+      <textarea
+        name="description"
+        id="item-description"
+        cols="30" rows="3"
+        class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        v-model="item.description"></textarea>
     </div>
     <div class="text-left my-4">
       <label for="item-status" class="font-bold w-full mr-2">¿Debería revisarlo en la próxima reserva?</label>
@@ -30,7 +32,9 @@
 </template>
 
 <script>
+import textField from '@/components/fields/TextField';
 export default {
+  components: { textField },
   props:['id'],
   data() {
     return {
@@ -90,7 +94,7 @@ export default {
         const response = await this.callEndpoints(
           this.axios,
           'post',
-          `/items/${this.id}`,
+          '/items/',
           localStorage.token,
           this.item
         );

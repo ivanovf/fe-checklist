@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView'
+import HomeView from '@/views/HomeView'
 import axios from 'axios'
 
 const routes = [
@@ -14,7 +14,7 @@ const routes = [
   {
     path: '/users',
     name: 'users',
-    component: () => import('../views/user/UsersView.vue'),
+    component: () => import('@/views/user/UsersView.vue'),
     meta: {
       requiresAuth: true
     },
@@ -22,7 +22,7 @@ const routes = [
   {
     path: '/users/:id/edit',
     name: 'user-detail-edit',
-    component: () => import('../views/user/UserView.vue'),
+    component: () => import('@/views/user/UserView.vue'),
     meta: {
       requiresAuth: true
     },
@@ -31,7 +31,7 @@ const routes = [
   {
     path: '/users/:id/delete',
     name: 'user-detail-delete',
-    component: () => import('../views/user/UserView.vue'),
+    component: () => import('@/views/user/UserView.vue'),
     meta: {
       requiresAuth: true
     },
@@ -40,7 +40,7 @@ const routes = [
   {
     path: '/users/new',
     name: 'user-detail-new',
-    component: () => import('../views/user/UserView.vue'),
+    component: () => import('@/views/user/UserView.vue'),
     meta: {
       requiresAuth: true
     },
@@ -48,7 +48,7 @@ const routes = [
   {
     path: '/items',
     name: 'items',
-    component: () => import('../views/items/ItemsView.vue'),
+    component: () => import('@/views/items/ItemsView.vue'),
     meta: {
       requiresAuth: true
     },
@@ -56,7 +56,7 @@ const routes = [
   {
     path: '/items/:id/edit',
     name: 'item-detail-edit',
-    component: () => import('../views/items/ItemView.vue'),
+    component: () => import('@/views/items/ItemView.vue'),
     meta: {
       requiresAuth: true
     },
@@ -65,7 +65,7 @@ const routes = [
   {
     path: '/items/:id/delete',
     name: 'item-detail-delete',
-    component: () => import('../views/items/ItemView.vue'),
+    component: () => import('@/views/items/ItemView.vue'),
     meta: {
       requiresAuth: true
     },
@@ -74,7 +74,7 @@ const routes = [
   {
     path: '/items/new',
     name: 'item-detail-new',
-    component: () => import('../views/items/ItemView.vue'),
+    component: () => import('@/views/items/ItemView.vue'),
     meta: {
       requiresAuth: true
     },
@@ -82,7 +82,42 @@ const routes = [
   {
     path: '/reservations',
     name: 'reservations',
-    component: () => import('../views/reservations/ReservationView.vue'),
+    component: () => import('@/views/reservations/ReservationsView.vue'),
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/reservations/:id/edit',
+    name: 'reservation-edit',
+    component: () => import('@/views/reservations/ReservationView.vue'),
+    meta: {
+      requiresAuth: true
+    },
+    props: true,
+  },
+  {
+    path: '/reservations/:id/delete',
+    name: 'reservation-delete',
+    component: () => import('@/views/reservations/ReservationView.vue'),
+    meta: {
+      requiresAuth: true
+    },
+    props: true,
+  },
+  {
+    path: '/reservations/:id/validate',
+    name: 'validate-checklist',
+    component: () => import('@/views/reservations/ValidateChecklist.vue'),
+    meta: {
+      requiresAuth: true
+    },
+    props: true,
+  },
+  {
+    path: '/reservations/new',
+    name: 'reservation-new',
+    component: () => import('@/views/reservations/ReservationView.vue'),
     meta: {
       requiresAuth: true
     }
@@ -90,7 +125,7 @@ const routes = [
   {
     path: '/about',
     name: 'about',
-    component: () => import( '../views/AboutView.vue'),
+    component: () => import( '@/views/AboutView.vue'),
     meta: {
       requiresAuth: true
     }
@@ -98,7 +133,7 @@ const routes = [
   {
     path: '/login',
     name: 'login',
-    component: () => import('../views/LoginView.vue')
+    component: () => import('@/views/LoginView.vue')
   }
 ]
 
@@ -112,7 +147,7 @@ const validSession = async () => {
     const res = await axios.get(
       `${process.env.VUE_APP_BE_HOST}/login/validate`,
       { headers: {'Authorization': `Bearer ${ localStorage.token }`} });
-      if(res.data) {
+      if(res.data.access) {
         return true;
       }
   }

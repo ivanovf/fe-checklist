@@ -1,5 +1,5 @@
 
-const callEndpoint = async function(axios, method, path, token, body = null) {
+const callEndpoint = async function(axios, method, path, token = null, body = null) {
 
   const baseUrl = process.env.VUE_APP_BE_HOST;
   let response = {};

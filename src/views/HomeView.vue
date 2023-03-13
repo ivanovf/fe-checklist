@@ -7,9 +7,9 @@
       Reservas pendientes por revisar
     </p>
     <h1 v-for="r in reservations" v-bind:key="r._id">
-      {{ dateFormat(r.date) }}
+      {{ dateFormat(r.dateEnd) }}
       <div class="action">
-        <button>Validar Reserva</button>
+        <router-link :to="{ name: 'validate-checklist', params: {id: r._id } }" class="button">Validar Reserva</router-link>
       </div>
     </h1>
   </main>
@@ -19,9 +19,6 @@
 
 export default {
   name: 'HomeView',
-  components: {
-    
-  },
   data() {
     return {
       reservations: [],
@@ -32,23 +29,17 @@ export default {
       const date = new Date(dateFormat);
       const month = new Intl.DateTimeFormat('es-ES', { month: 'long'}).format(date);
       const lastPart = month.slice(1);
-      return `${date.getDay()} de ${month.charAt(0).toUpperCase() + lastPart }`;
+      return `${date.getDate()} de ${month.charAt(0).toUpperCase() + lastPart }`;
     }
   },
-  mounted() {
-    this.axios.get(
-      `${process.env.VUE_APP_BE_HOST}/reservations/all?limit=10&offset=0`,
-      { headers: {'Authorization': `Bearer ${ localStorage.token }`} }
-    )
-    .then(response => {
+  async mounted() {
+    const response = await this.callEndpoints(this.axios, 'get', '/reservations/all?sort=asc&old=true', localStorage.token);
+    if (response?.error?.status === 401) {
+      this.$router.push({ name: 'home' });
+    }
+    else {
       this.reservations = response.data;
-    })
-    .catch(error => {
-      console.log(error);
-      if (error.response.status === 401) {
-        this.error = true;
-      }
-    });
+    }
   }
 }
 </script>
@@ -71,7 +62,7 @@ h1 {
   margin-top: 14px;
   color: var(--brand-green);
 }
-button {
+.button {
   color: white;
   font-size: 1.25rem;
   background-color: deeppink;

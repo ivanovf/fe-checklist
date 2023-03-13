@@ -97,23 +97,27 @@ export default {
     };
   },
   methods: {
-    login() {
-      this.axios
-        .post("http://localhost:3000/login", {
+    async login() {
+
+      try {
+        const response = await this.callEndpoints(this.axios, 'post', '/login', null, {
           email: this.userName,
           password: this.password,
-        })
-        .then((response) => {
-          localStorage.setItem("token", response.data.access_token);
-          this.$router.push("/");
-        })
-        .catch((error) => {
-          console.log(error);
-          if (error.response.status === 401) {
-            this.error = true;
-          }
-          console.log(error.response.status);
         });
+
+        if (response.error) {
+          this.error = true;
+        }
+        else {
+          localStorage.setItem("token", response.data.access_token);
+          this.$store.commit('setCurrentUser', response.data.user);
+          this.$router.push("/");
+        }
+      } catch (error) {
+        if (error.statusCode === 401) {
+          this.$router.push({ name: 'login' });
+        }
+      }
     },
   },
 };

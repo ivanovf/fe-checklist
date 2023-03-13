@@ -1,6 +1,9 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: [],
+  content: [
+    "./src/**/*.{html,js}",
+    "./node_modules/tw-elements/dist/js/**/*.js"
+  ],
   presets: [],
   darkMode: 'media', // or 'class'
   theme: {
@@ -951,5 +954,5 @@ module.exports = {
       50: '50',
     },
   },
-  plugins: [],
+  plugins: [require("tw-elements/dist/plugin")]
 }

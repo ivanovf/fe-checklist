@@ -12,15 +12,15 @@
         <router-link to="/users" class="bloc-icon">
             <img src="@/assets/icons/users.svg" alt="">
         </router-link>
-        <router-link to="/users" class="bloc-icon">
+        <router-link :to="{ name: 'user-detail-edit', params: { id: uid } }" class="bloc-icon">
             <img src="@/assets/icons/profile.svg" alt="">
         </router-link>
     </nav>
 </template>
 
 <script>
-
-export default{
+export default {
+  props:['uid']
 }
 </script>
 <style scoped>

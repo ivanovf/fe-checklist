@@ -1,7 +1,7 @@
 <template>
   <PageLayout>
-    <template #header>
-      <HeaderLayout v-if="isValidToken"></HeaderLayout>
+    <template #header v-if="currentUser">
+      <HeaderLayout></HeaderLayout>
     </template>
     <template #body>
       <div
@@ -13,10 +13,12 @@
         }">
         {{ message.text }}
       </div>
-      <router-view ></router-view>
+      <div class="container mx-auto px-4">
+        <router-view ></router-view>
+      </div>
     </template>
-    <template #footer v-if="isValidToken">
-      <FooterLayout></FooterLayout>
+    <template #footer v-if="currentUser">
+      <FooterLayout :uid="currentUser.id"></FooterLayout>
     </template>
   </PageLayout>
 </template>
@@ -26,42 +28,48 @@ import HeaderLayout from '@/components/layouts/HeaderLayout';
 import FooterLayout from '@/components/layouts/FooterLayout.vue';
 
   export default {
+    inject: ['message'],
     components:{
       PageLayout,
       HeaderLayout,
       FooterLayout,
     },
-    data() {
-      return {
-        isValidToken: false
+    computed: {
+      currentUser() {
+        return this.$store.state.currentUser??null;
       }
     },
     methods: {
       logOut() {
         localStorage.clear();
-        this.$router.push('/login');
+        this.$router.push({ name: 'login' });
       },
       async validSession() {
         try {
           const res = await this.axios.get(
             `${process.env.VUE_APP_BE_HOST}/login/validate`,
             { headers: {'Authorization': `Bearer ${ localStorage.token }`} });
-            if(res.data) {
-              return true;
-            }
+          if(res.data.access) {
+            this.$store.commit('setCurrentUser', res.data.user);
+            return true;
           }
-          catch(error) {
-            return false;
-          }
+          return false;
         }
-      },
-      mounted() {
-        if(!this.validSession()) {
+        catch(error) {
+          return false;
+        }
+      }
+    },
+    async mounted() {
+      if (!localStorage.token) {
+        this.logOut();
+      }
+      else {
+        const validate = await this.validSession();
+        if (!validate) {
           this.logOut();
         }
-        else{
-          this.isValidToken = true;
-        }
+      }
     }
   }
 </script>
