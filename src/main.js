@@ -23,8 +23,33 @@ createApp(App)
   .use(store)
   .use(VueAxios, axios)
   .mixin({
+    data() {
+      return {
+        months: [
+          'Enero',
+          'Febrero',
+          'Marzo',
+          'Abril',
+          'Mayo',
+          'Junio',
+          'Julio',
+          'Agosto',
+          'Septiembre',
+          'Noviembre',
+          'Diciembre'
+        ],
+      }
+    },
     methods: {
       callEndpoints: apiHandler,
+      getDay(eventDate) {
+        const newDate = new Date(eventDate);
+        return newDate.getDate();
+      },
+      getMonth(eventDate) {
+        const newDate = new Date(eventDate);
+        return this.months[newDate.getMonth()];
+      },
     }
   })
   .provide('message', {

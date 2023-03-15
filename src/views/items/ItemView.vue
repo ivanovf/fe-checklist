@@ -10,21 +10,40 @@
       Cancelar
     </router-link>
   </div>
-  <div v-else class="mt-8 p-4">
+  <div v-else>
     <h1 class="text-3xl mt-4">{{ item.label }}</h1>
     <text-field label="Item" v-model="item.label" name="item" inputId="item-label" />
     <div class="text-left my-4">
-      <label for="description" class="font-bold">¿Que revisar?</label>
-      <textarea
-        name="description"
-        id="item-description"
-        cols="30" rows="3"
-        class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-        v-model="item.description"></textarea>
+      <text-area-field inputId="item-description" name="description" label="¿Qué revisar?" v-model="item.description"></text-area-field>
     </div>
     <div class="text-left my-4">
       <label for="item-status" class="font-bold w-full mr-2">¿Debería revisarlo en la próxima reserva?</label>
       <input type="checkbox" name="status" id="item-status" v-bind:checked="item.status" v-model="item.status"/>
+    </div>
+    <div>
+      <h3 class="my-4 text-xl font-bold">Categoría</h3>
+      <ul class="grid grid-cols-2 gap-2 mb-4">
+        <li v-for="cat in categories" v-bind:key="cat.name">
+          <a href="#" v-on:click.prevent="item.category = cat.name" :class="{
+            'border-2': true,
+            'rounded-md': true,
+            flex: true,
+            'flex-row': true,
+            'bg-cyan-600': item.category == cat.name,
+            'p-2': true,
+            'font-bold': item.category == cat.name,
+            'text-white': item.category == cat.name,
+           }">
+            <img :src="getImageUrl(cat.name)" width="25" alt="" :class="{
+              'mr-4': true,
+              'svg-selected': item.category == cat.name,
+             }">
+            <span>
+              {{ cat.label }}
+            </span>
+          </a>
+        </li>
+      </ul>
     </div>
     <button v-on:click="save" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Guardar</button>
 
@@ -32,18 +51,49 @@
 </template>
 
 <script>
-import textField from '@/components/fields/TextField';
+import textField from '@/components/fields/TextField'
+import TextAreaField from '@/components/fields/TextAreaField'
+
 export default {
-  components: { textField },
+  components: { textField, TextAreaField },
   props:['id'],
   data() {
     return {
       item: {
         status: false
       },
+      categories: [
+        {
+          name: 'bathroom',
+          label: 'Baño'
+        },
+        {
+          name: 'bedroom',
+          label: 'Habitaciones'
+        },
+        {
+          name: 'diningroom',
+          label: 'Comedor'
+        },
+        {
+          name: 'kitchenroom',
+          label: 'Cocina'
+        },
+        {
+          name: 'livingroom',
+          label: 'Sala'
+        },
+        {
+          name: 'washingroom',
+          label: 'Lavado'
+        }
+      ]
     }
   },
   methods: {
+    getImageUrl(filename) {
+      return require(`@/assets/icons/${filename}.svg`)
+    },
     async deleteItem() {
       const response = await this.callEndpoints(
         this.axios,
@@ -133,3 +183,8 @@ export default {
   }
 }
 </script>
+<style>
+.svg-selected {
+  filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%);
+}
+</style>

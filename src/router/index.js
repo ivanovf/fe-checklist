@@ -168,7 +168,12 @@ router.beforeEach((to, from, next) => {
       logOut();
       next('/login')
     } else {
-      next()
+      if (to.path.includes('/api')) {
+        next(false)
+      }
+      else {
+        next()
+      }
     }
   } else {
     next()

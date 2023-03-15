@@ -1,17 +1,21 @@
 <template>
   <main>
-    <p v-if="!reservations">
-      No hay reservas pendientes por revisar
+    <p v-if="!reservations" class="my-4 p-2 text-xl font-bold">
+      No hay reservas pendientes
     </p>
-    <p v-else>
-      Reservas pendientes por revisar
+    <p v-else class="my-4 p-2 text-xl font-bold">
+      Reservas pendientes
     </p>
-    <h1 v-for="r in reservations" v-bind:key="r._id">
-      {{ dateFormat(r.dateEnd) }}
-      <div class="action">
-        <router-link :to="{ name: 'validate-checklist', params: {id: r._id } }" class="button">Validar Reserva</router-link>
-      </div>
-    </h1>
+    <div v-for="r in reservations" v-bind:key="r._id">
+      <router-link :to="{ name: 'validate-checklist', params: {id: r._id } }" class="block shadow rounded-md p-4 bg-sky-100 my-2">
+        <p class="text-lg font-bold">
+          <img src="@/assets/icons/check-sign.svg" width="25" class="inline rounded-full border bg-green-400" /> {{ dateFormat(r.dateEnd) }}
+        </p>
+        <p class="text-sm">
+          Validar Reserva
+        </p>
+      </router-link>
+    </div>
   </main>
 </template>
 
@@ -33,7 +37,12 @@ export default {
     }
   },
   async mounted() {
-    const response = await this.callEndpoints(this.axios, 'get', '/reservations/all?sort=asc&old=true', localStorage.token);
+    const response = await this.callEndpoints(
+      this.axios,
+      'get',
+      '/reservations/all?sort=asc&old=true&validated=false',
+      localStorage.token
+    );
     if (response?.error?.status === 401) {
       this.$router.push({ name: 'home' });
     }
@@ -43,33 +52,3 @@ export default {
   }
 }
 </script>
-<style scoped>
-main {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  width: 100%;
-}
-
-h1,
-p {
-  margin: 0;
-  text-align: center;
-}
-
-h1 {
-  margin-top: 14px;
-  color: var(--brand-green);
-}
-.button {
-  color: white;
-  font-size: 1.25rem;
-  background-color: deeppink;
-  border: none;
-  width: 100%;
-  padding: 24px 60px;
-  border-radius: 60px;
-  box-sizing: border-box;
-}
-</style>

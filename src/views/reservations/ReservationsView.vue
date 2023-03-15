@@ -1,75 +1,48 @@
 <template>
   <h1 class="mt-4 p-2 text-xl font-bold">Reservas</h1>
-  <div class="m-6 max-w-sm grid grid-cols-3 gap-4"
+  <div class="m-6 max-w-sm grid grid-cols-3 gap-4 border-b border-slate-300"
     v-for="r in reservations" v-bind:key="r._id">
     <div>
-      <div class="py-3 px-4 font-bold text-lg">
-        {{ r.type }}
+      <router-link
+        :to="{ name: 'reservation-edit', params: { id: r._id } }">
+      <div class="calendar">
+        {{ getDay(r.dateEnd) }}
       </div>
-    </div>
-    <div>
-      <router-link
-        :to="{ name: 'reservation-edit', params: { id: r._id } }">
-        <div class="up-triangle"></div>
-        <div class="border rounded-md">
-          <div class="py-2 px-4 bg-orange-500 text-white font-bold rounded-md">{{ getMonth(r.dateIni) }}</div>
-          <div class="py-3 px-4 font-bold text-lg">
-            {{ getDay(r.dateIni) }}
-          </div>
-        </div>
+      <div class="px-4">
+        <img :src="getImageUrl(r.type)" alt="" class="w-14 h-10 text-gray-500 dark:text-gray-400">
+      </div>
       </router-link>
     </div>
-    <div>
+    <div class="text-left col-span-2">
       <router-link
         :to="{ name: 'reservation-edit', params: { id: r._id } }">
-        <div class="down-triangle"></div>
-        <div class="border rounded-md">
-          <div class="py-2 px-4 bg-orange-500 text-white font-bold rounded-md">{{ getMonth(r.dateEnd) }}</div>
-          <div class="py-3 px-4 font-bold text-lg">
-            {{ getDay(r.dateEnd) }}
-          </div>
-        </div>
+        <p class="mb-4">
+          <strong>Llegada: </strong>{{ getMonth(r.dateIni) }} {{ getDay(r.dateIni) }} <br>
+        </p>
+        <p>
+          <strong>Salida: </strong> {{ getMonth(r.dateEnd) }} {{ getDay(r.dateEnd) }}
+        </p>
       </router-link>
     </div>
   </div>
-  <div class="p-8 flex flex-row-reverse sticky bottom-12">
-    <router-link
-      :to="{ name: 'reservation-new' }"
-      class="p-2 w-12 h-12 border-2 rounded-full bg-slate-100 order-black overflow-hidden" >
-      <img src="@/assets/icons/plus.svg" alt="">
-    </router-link>
-  </div>
+  <plus-button route="reservation-new"></plus-button>
 </template>
 <script>
+import PlusButton from '@/components/atoms/PlusButton';
 
 export default {
+  components: {
+    PlusButton
+  },
   data() {
     return {
       reservations: [],
-      months: [
-        'Enero',
-        'Febrero',
-        'Marzo',
-        'Abril',
-        'Mayo',
-        'Junio',
-        'Julio',
-        'Agosto',
-        'Septiembre',
-        'Noviembre',
-        'Diciembre'
-      ],
     }
   },
   methods: {
-    getDay(eventDate) {
-      const newDate = new Date(eventDate);
-      return newDate.getDate();
+    getImageUrl(filename) {
+      return require(`@/assets/logos/${filename}.svg`)
     },
-    getMonth(eventDate) {
-      const newDate = new Date(eventDate);
-      return this.months[newDate.getMonth()];
-    }
   },
   async mounted() {
     const response = await this.callEndpoints(this.axios, 'get', '/reservations/all?sort=asc', localStorage.token);
@@ -83,22 +56,12 @@ export default {
 }
 </script>
 <style scoped>
-.up-triangle {
-  width: 0;
-  height: 0;
-  border-left: 30px solid transparent;
-  border-right: 30px solid transparent;
-  border-bottom: 20px solid green;
-  margin: 5px auto;
-}
-
-.down-triangle {
-  width: 0;
-  height: 0;
-  border-left: 30px solid transparent;
-  border-right: 30px solid transparent;
-  border-top: 20px solid red;
-  margin: 5px auto;
-}
+  .calendar {
+    background: url('~@/assets/icons/calendar.svg') no-repeat;
+    background-size: 45px 45px;
+    background-position: center;
+    height: 50px;
+    padding-top: 22px;
+    font-weight: bold;
+  }
 </style>
-

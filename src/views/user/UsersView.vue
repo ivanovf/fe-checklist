@@ -5,7 +5,7 @@
     class="flex flex-row p-4 h-24 items-center border-b border-slate-300">
     <div class="basis-1/5">
       <div class="w-12 h-12 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600 relative inline-flex items-center justify-center">
-        <span class="font-medium text-gray-600 bg-slate-100 dark:text-gray-300">JL</span>
+        <span class="font-medium text-gray-600 bg-slate-100 dark:text-gray-300">{{ initials(user.email) }}</span>
       </div>
     </div>
     <div class="basis-3/5 grow text-left ml-2">
@@ -27,20 +27,22 @@
         </router-link>
     </div>
   </div>
-  <div class="p-8 flex flex-row-reverse sticky bottom-12">
-    <router-link
-      :to="{ name: 'user-detail-new' }"
-      class="p-2 w-12 h-12 border-2 rounded-full bg-slate-100 order-black overflow-hidden" >
-      <img src="@/assets/icons/plus.svg" alt="">
-    </router-link>
-  </div>
+
+  <plus-button route="user-detail-new"></plus-button>
 </template>
 <script>
+import PlusButton from '@/components/atoms/PlusButton.vue';
 
 export default {
+  components: { PlusButton },
   data() {
     return {
       users: [],
+    }
+  },
+  methods: {
+    initials(email) {
+      return `${email[0]}${email[1]}`.toUpperCase();
     }
   },
   async mounted() {

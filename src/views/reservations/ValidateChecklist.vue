@@ -1,9 +1,14 @@
 <template>
-  <h1>Validar checklist</h1>
-  <p v-if="reservation.dateEnd">
-    {{ dateFormat }}
+  <h1 class="my-4 p-2 text-xl font-bold">Validar checklist</h1>
+  <p v-if="reservation.dateEnd" class="text-lg my-4 font-bold">
+    <span class="bg-slate-100 py-2 px-4 mr-4 border-l-4 border-lime-500">
+      {{ getDay(reservation.dateIni) }} de {{ getMonth(reservation.dateIni) }}
+    </span>
+    <span class="bg-slate-100 py-2 px-4 mr-4 border-l-4 border-red-500">
+      {{ getDay(reservation.dateEnd) }} de {{ getMonth(reservation.dateEnd) }}
+    </span>
   </p>
-  <ul>
+  <ul class="mb-8">
     <li
       v-for="(item, index) in reservation.items"
       class="text-left py-2 px-4 mb-2 rounded-md border"
@@ -39,6 +44,7 @@
 <script>
 import TextAreaField from '@/components/fields/TextAreaField';
 import CheckBoxField from '@/components/fields/CheckBoxField';
+
 export default {
   components: { TextAreaField, CheckBoxField },
   props: ['id'],
@@ -49,19 +55,10 @@ export default {
       collpased: null,
     }
   },
-  computed: {
-    dateFormat() {
-      const dateIni = new Date(this.reservation.dateIni);
-      const dateEnd = new Date(this.reservation.dateEnd);
-
-      return `Del ${dateIni.getDate()} / ${dateIni.getMonth()} al ${dateEnd.getDate()} / ${dateIni.getMonth()}`;
-    }
-  },
   methods: {
     async  save() {
 
       try {
-
         this.reservation.validated = true;
         const response = await this.callEndpoints(
           this.axios,
@@ -106,3 +103,4 @@ export default {
   }
 }
 </script>
+

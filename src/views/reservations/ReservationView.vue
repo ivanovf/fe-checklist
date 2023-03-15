@@ -59,10 +59,11 @@ export default {
   },
   methods: {
     async save() {
-      // Separates the dates in 2 different fields.
       this.reservation.dateIni = this.reservation.date[0];
       this.reservation.dateEnd = this.reservation.date[1];
       delete this.reservation.date;
+
+      this.reservation.validated = false;
 
       if (this.$route.name === 'reservation-edit') {
         try {
