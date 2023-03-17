@@ -12,15 +12,24 @@
   </div>
   <div v-else>
     <h1 class="text-3xl mt-4">{{ item.label }}</h1>
-    <text-field label="Item" v-model="item.label" name="item" inputId="item-label" />
+    <text-field label="Item" v-model="item.label" name="item" inputId="item-label" :msg="errors.label"/>
     <div class="text-left my-4">
-      <text-area-field inputId="item-description" name="description" label="¿Qué revisar?" v-model="item.description"></text-area-field>
+      <text-area-field
+        inputId="item-description"
+        name="description"
+        label="¿Qué revisar?"
+        v-model="item.description"
+        :msg="errors.description">
+      </text-area-field>
     </div>
     <div class="text-left my-4">
       <label for="item-status" class="font-bold w-full mr-2">¿Debería revisarlo en la próxima reserva?</label>
       <input type="checkbox" name="status" id="item-status" v-bind:checked="item.status" v-model="item.status"/>
     </div>
-    <div>
+    <div :class="{'rounded-lg': true,
+        'bg-red-50': this.errors?.category,
+        'border-red-500': this.errors?.category}">
+
       <h3 class="my-4 text-xl font-bold">Categoría</h3>
       <ul class="grid grid-cols-2 gap-2 mb-4">
         <li v-for="cat in categories" v-bind:key="cat.name">
@@ -87,7 +96,28 @@ export default {
           name: 'washingroom',
           label: 'Lavado'
         }
-      ]
+      ],
+      validations: [
+        {
+          field: 'label',
+          rules: [
+            { required: true }
+          ]
+        },
+        {
+          field: 'description',
+          rules: [
+            { required: true }
+          ]
+        },
+        {
+          field: 'category',
+          rules: [
+            { required: true }
+          ]
+        }
+      ],
+      errors: {}
     }
   },
   methods: {
@@ -120,6 +150,11 @@ export default {
 
     },
     async save() {
+      this.errors = this.validateForm(this.validations, this.item);
+      if (Object.keys(this.errors).length > 0) {
+        return false;
+      }
+
       if (this.id && this.$route.name === 'item-detail-edit') {
         const response = await this.callEndpoints(
           this.axios,
@@ -172,7 +207,6 @@ export default {
       );
 
       this.item = {...response.data};
-      console.log(this.item);
       if (response?.error?.status === 401) {
         this.$router.push({ name: 'items' });
       }

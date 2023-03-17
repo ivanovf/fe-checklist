@@ -16,6 +16,15 @@
         </p>
       </router-link>
     </div>
+
+    <h3 class="p-4 text-xl">Clave del candado</h3>
+    <div class="grid grid-cols-4 gap-2 w-1/2 mx-auto">
+      <div class="p-2 border-2 rounded-md border-red-400 w-8 h-8 leading-4 font-bold">9</div>
+      <div class="p-2 border-2 rounded-md border-red-400 w-8 h-8 leading-4 font-bold">2</div>
+      <div class="p-2 border-2 rounded-md border-red-400 w-8 h-8 leading-4 font-bold">7</div>
+      <div class="p-2 border-2 rounded-md border-red-400 w-8 h-8 leading-4 font-bold">5</div>
+    </div>
+
   </main>
 </template>
 

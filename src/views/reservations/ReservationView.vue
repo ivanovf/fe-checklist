@@ -13,15 +13,38 @@
   <div v-else>
     <h1 class="mt-4 p-2 text-xl font-bold">Reserva</h1>
 
-    <VueDatePicker v-model="reservation.date" range format="Y-m-d"></VueDatePicker>
-    <text-area-field inputId="contact" name="contact" label="Información de Contacto" v-model="reservation.contact"></text-area-field>
-    <div class="text-left my-4">
-      <input type="radio" name="role" id="user-status-1" class="mr-2" value="airbnb" v-model="reservation.type"/>
-      <label for="user-status-1" class="font-bold w-full mr-2">AirBnB</label>
+    <div :class="{'rounded-lg': true,
+        'p-2': true,
+        'bg-red-50': errors?.date,
+        'border-red-500': errors?.date}">
+      <VueDatePicker v-model="reservation.date" range format="Y-m-d"></VueDatePicker>
+      <p
+        v-if="errors?.date"
+        class="mt-2 text-sm text-red-600 dark:text-red-500">
+        {{ errors.date.text }}
+      </p>
     </div>
-    <div class="text-left my-4">
-      <input type="radio" name="role" id="user-status-2" class="mr-2" value="booking" v-model="reservation.type"/>
-      <label for="user-status-2" class="font-bold w-full">Booking</label>
+
+    <text-area-field inputId="contact" name="contact" label="Información de Contacto" v-model="reservation.contact"></text-area-field>
+
+    <div :class="{'rounded-lg': true,
+        'p-4': true,
+        'mb-4':true,
+        'bg-red-50': this.errors?.type,
+        'border-red-500': this.errors?.type}">
+      <div class="text-left my-4">
+        <input type="radio" name="role" id="user-status-1" class="mr-2" value="airbnb" v-model="reservation.type"/>
+        <label for="user-status-1" class="font-bold w-full mr-2">AirBnB</label>
+      </div>
+      <div class="text-left my-4">
+        <input type="radio" name="role" id="user-status-2" class="mr-2" value="booking" v-model="reservation.type"/>
+        <label for="user-status-2" class="font-bold w-full">Booking</label>
+      </div>
+      <p
+        v-if="errors?.type"
+        class="mt-2 text-sm text-red-600 dark:text-red-500">
+        {{ errors.type.text }}
+      </p>
     </div>
 
     <ul class="grid grid-cols-3 gap-2 mb-4 items-center">
@@ -46,7 +69,25 @@ export default {
       reservation: {
         items: {},
         date: []
-      }
+      },
+      errors: {},
+      validations: [
+        {
+          field: 'date',
+          rules: [
+            { required: true }
+          ]
+        },
+        {
+          field: 'type',
+          rules: [
+            {
+              required: true,
+              rewriteMsg: 'Debes seleccionar una'
+            }
+          ]
+        }
+      ]
     }
   },
   computed: {
@@ -59,6 +100,14 @@ export default {
   },
   methods: {
     async save() {
+
+      console.log(this.reservation.date);
+
+      this.errors = this.validateForm(this.validations, this.reservation);
+      if (Object.keys(this.errors).length > 0) {
+        return false;
+      }
+
       this.reservation.dateIni = this.reservation.date[0];
       this.reservation.dateEnd = this.reservation.date[1];
       delete this.reservation.date;
