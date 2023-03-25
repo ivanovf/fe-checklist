@@ -47,6 +47,11 @@
       </p>
     </div>
 
+    <div>
+      Agregar clave?
+      <user-number-lock :active="true" v-model="reservation.userLock"></user-number-lock>
+    </div>
+
     <ul class="grid grid-cols-3 gap-2 mb-4 items-center">
       <li class="p-2 rounded-md border text-xs"
         v-for="item in reservation.items" v-bind:key="item._id">
@@ -60,9 +65,10 @@
 import TextAreaField from '@/components/fields/TextAreaField'
 import VueDatePicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
+import UserNumberLock from '@/components/atoms/UserNumberLock.vue'
 
 export default {
-  components: { TextAreaField, VueDatePicker },
+  components: { TextAreaField, VueDatePicker, UserNumberLock },
   props: ['id'],
   data() {
     return {

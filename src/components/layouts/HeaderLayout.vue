@@ -1,22 +1,8 @@
 <template>
     <header>
-      <div class="hamburger-menu">
-        <input id="menu__toggle" type="checkbox" />
-        <label class="menu__btn" for="menu__toggle">
-          <span></span>
-        </label>
-        <ul class="menu__box">
-          <li><router-link class="menu__item" to="/">Home</router-link></li>
-          <li><router-link class="menu__item" to="/users">Admin Users</router-link></li>
-          <li><router-link class="menu__item" to="/items">Admin items</router-link></li>
-          <li>
-            <a class="menu__item" href="#" @click="logOut">
-              Logout
-            </a>
-          </li>
-          <li><router-link class="menu__item" to="/about">About</router-link></li>
-        </ul>
-      </div>
+      <router-link :to="{ name: 'user-detail-edit', params: { id: uid } }" class="bloc-icon">
+        <img src="@/assets/icons/profile.svg" alt="">
+      </router-link>
 
       <h1><span>Check</span>List</h1>
       <router-link to="/">
@@ -26,15 +12,7 @@
   </template>
   <script>
   export default {
-    methods: {
-      reload() {
-        location.reload();
-      },
-      logOut() {
-        localStorage.removeItem('token');
-        this.reload();
-      }
-    }
+    props: ['uid'],
   }
   </script>
   <style scoped>

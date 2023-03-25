@@ -11,6 +11,7 @@
     </router-link>
   </div>
   <div v-else class="mt-8 p-4">
+    <button v-on:click="logOut" class="p-2 mb-4">Logout</button>
     <h3>{{ user.email }}</h3>
     <text-field-vue v-model="user.name" label="Nombre" inputId="name" name="name"/>
     <div v-if="$route.name === 'user-detail-edit'">
@@ -86,6 +87,13 @@ export default {
     }
   },
   methods: {
+    reload() {
+      location.reload();
+    },
+    logOut() {
+      localStorage.removeItem('token');
+      this.reload();
+    },
     async deleteUser() {
       const response = await this.callEndpoints(
         this.axios,

@@ -80,6 +80,40 @@ const routes = [
     },
   },
   {
+    path: '/locks',
+    name: 'locks',
+    component: () => import('@/views/locks/LocksView.vue'),
+    meta: {
+      requiresAuth: true
+    },
+  },
+  {
+    path: '/locks/:id/edit',
+    name: 'lock-detail-edit',
+    component: () => import('@/views/locks/LockView.vue'),
+    meta: {
+      requiresAuth: true
+    },
+    props: true,
+  },
+  {
+    path: '/locks/:id/delete',
+    name: 'lock-detail-delete',
+    component: () => import('@/views/locks/LockView.vue'),
+    meta: {
+      requiresAuth: true
+    },
+    props: true,
+  },
+  {
+    path: '/locks/new',
+    name: 'lock-detail-new',
+    component: () => import('@/views/locks/LockView.vue'),
+    meta: {
+      requiresAuth: true
+    },
+  },
+  {
     path: '/reservations',
     name: 'reservations',
     component: () => import('@/views/reservations/ReservationsView.vue'),

@@ -1,7 +1,7 @@
 <template>
   <PageLayout>
     <template #header v-if="currentUser">
-      <HeaderLayout></HeaderLayout>
+      <HeaderLayout :uid="currentUser.id"></HeaderLayout>
     </template>
     <template #body>
       <div
@@ -18,7 +18,7 @@
       </div>
     </template>
     <template #footer v-if="currentUser">
-      <FooterLayout :uid="currentUser.id"></FooterLayout>
+      <FooterLayout></FooterLayout>
     </template>
   </PageLayout>
 </template>
