@@ -17,7 +17,11 @@ export default {
   components: { TextField },
   data() {
     return {
-      settings: {},
+      settings: {
+        doorLock: '',
+        mainLock: '',
+        usersLimit: 20,
+      },
       validations: [
         {
           field: 'doorLook',
@@ -126,12 +130,12 @@ export default {
       localStorage.token
     );
     if (response?.error?.status === 401) {
-      this.$router.push({ name: 'home' });
+      console.log(response.error);
     }
     else {
       this.settings = response.data;
       if (this.settings[0]) {
-        this.settings = this.settings[0];
+        this.settings =  { ...this.settings[0] }
       }
     }
   }
