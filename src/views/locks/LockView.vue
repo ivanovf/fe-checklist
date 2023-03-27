@@ -31,11 +31,58 @@
 
     <button v-on:click="save" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Guardar</button>
 
+    <div v-if="lock.lock && lock.userNumber && settings.mainLock">
+      <h3 class="text-xl p-2 font-bold text-left border-b-2">Instrucciones</h3>
+      <p class="p-2 text-left">Toque cualquier número para activar el teclado y siga las siguientes instrucciones:</p>
+
+      <h4 class="text-md p-2 font-bold text-left">Para agregar</h4>
+      <div class="grid grid-cols-7 gap-1 place-items-center bg-gray-500 p-2 rounded">
+        <circle-number :num="settings.mainLock.charAt(0)"/>
+        <circle-number :num="settings.mainLock.charAt(1)"/>
+        <circle-number :num="settings.mainLock.charAt(2)"/>
+        <circle-number :num="settings.mainLock.charAt(3)"/>
+        <img src="@/assets/icons/lock-green.svg" alt="random"/>
+        <circle-number num="1"/>
+        <img src="@/assets/icons/lock-green.svg" alt="random" width="60"/>
+        <circle-number :num="lock.userNumber.charAt(0)"/>
+        <circle-number :num="lock.userNumber.charAt(1)"/>
+        <img src="@/assets/icons/lock-green.svg" alt="random" width="60"/>
+        <circle-number :num="boxes[0]"/>
+        <circle-number :num="boxes[1]"/>
+        <circle-number :num="boxes[2]"/>
+        <circle-number :num="boxes[3]"/>
+        <img src="@/assets/icons/lock-green.svg" alt="random" width="60"/>
+        <circle-number :num="boxes[0]"/>
+        <circle-number :num="boxes[1]"/>
+        <circle-number :num="boxes[2]"/>
+        <circle-number :num="boxes[3]"/>
+        <img src="@/assets/icons/lock-green.svg" alt="random" width="60"/>
+      </div>
+      <h4 class="text-md p-2 font-bold text-left">Para eliminar</h4>
+      <div class="grid grid-cols-7 gap-1 place-items-center bg-gray-500 p-2 rounded">
+        <circle-number :num="settings.mainLock.charAt(0)"/>
+        <circle-number :num="settings.mainLock.charAt(1)"/>
+        <circle-number :num="settings.mainLock.charAt(2)"/>
+        <circle-number :num="settings.mainLock.charAt(3)"/>
+        <img src="@/assets/icons/lock-green.svg" alt="random" width="60"/>
+        <circle-number num="2"/>
+        <img src="@/assets/icons/lock-green.svg" alt="random" width="60"/>
+        <circle-number :num="lock.userNumber.charAt(0)"/>
+        <circle-number :num="lock.userNumber.charAt(1)"/>
+        <img src="@/assets/icons/lock-green.svg" alt="random" width="60"/>
+        <circle-number :num="lock.userNumber.charAt(0)"/>
+        <circle-number :num="lock.userNumber.charAt(1)"/>
+        <img src="@/assets/icons/lock-green.svg" alt="random" width="60"/>
+
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
+import CircleNumber from '@/components/atoms/CircleNumber.vue';
 export default {
+  components: { CircleNumber },
   props:['id'],
   data() {
     return {
@@ -56,7 +103,8 @@ export default {
           ]
         },
       ],
-      errors: {}
+      errors: {},
+      settings: {},
     }
   },
   methods: {
@@ -151,22 +199,22 @@ export default {
   async mounted() {
 
     //Get a list of user to avoid repetition.
-    const r = await this.callEndpoints(
+    let response = await this.callEndpoints(
       this.axios,
       'get',
       '/locks/all?limit=20&offset=0',
       localStorage.token
     );
 
-    if (r?.error?.status === 401) {
+    if (response?.error?.status === 401) {
       this.$router.push({ name: 'locks' });
     }
     else {
-      this.usersUsed = r.data.map(l => l.userNumber);
+      this.usersUsed = response.data.map(l => l.userNumber);
     }
 
     if (this.id && this.$route.name === 'lock-detail-edit') {
-      const response = await this.callEndpoints(
+      response = await this.callEndpoints(
         this.axios,
         'get',
         `/locks/${this.id}`,
@@ -182,6 +230,22 @@ export default {
       }
 
       this.boxes = this.lock.lock.split('');
+
+      response = await this.callEndpoints(
+        this.axios,
+        'get',
+        '/config',
+        localStorage.token
+      );
+      if (response?.error?.status === 401) {
+        this.$router.push({ name: 'home' });
+      }
+      else {
+        this.settings = response.data;
+        if (this.settings[0]) {
+          this.settings = this.settings[0];
+        }
+      }
     }
   }
 }

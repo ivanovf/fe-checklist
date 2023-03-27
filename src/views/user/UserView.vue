@@ -17,7 +17,7 @@
     <div v-if="$route.name === 'user-detail-edit'">
       <fieldset>
         <legend
-          class="text-left text-lg leading-3 font-bold p-2 border rounded-md"
+          class="text-xl py-4 mb-4 font-bold text-left border-b-2 w-full"
           v-on:click ="changePassword = !changePassword">Cambiar contraseña
         </legend>
         <div class="border-2 p-4 rounded-md" v-if="changePassword">

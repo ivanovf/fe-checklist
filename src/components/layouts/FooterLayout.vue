@@ -15,6 +15,9 @@
         <router-link to="/users" class="bloc-icon">
             <img src="@/assets/icons/users.svg" alt="">
         </router-link>
+        <router-link :to="{ name: 'settings' }" class="bloc-icon">
+            <img src="@/assets/icons/settings.svg" alt="">
+        </router-link>
     </nav>
 </template>
 
