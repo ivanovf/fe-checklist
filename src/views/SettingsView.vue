@@ -67,7 +67,7 @@ export default {
         const response = await this.callEndpoints(
           this.axios,
           'post',
-          '/config/',
+          '/config',
           localStorage.token,
           this.settings
         );
@@ -96,9 +96,8 @@ export default {
       console.log(response.error);
     }
     else {
-      this.settings = response.data;
-      if (this.settings[0]) {
-        this.settings =  { ...this.settings[0] }
+      if (response.data[0]) {
+        this.settings = response.data[0];
       }
     }
   }
