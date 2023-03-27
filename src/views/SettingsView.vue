@@ -17,11 +17,7 @@ export default {
   components: { TextField },
   data() {
     return {
-      settings: {
-        doorLock: '',
-        mainLock: '',
-        usersLimit: 20,
-      },
+      settings: {},
       validations: [
         {
           field: 'doorLook',
@@ -47,13 +43,13 @@ export default {
   methods: {
     async save() {
 
-      if (this.id && this.$route.name === 'lock-detail-edit') {
+      if (this.settings._id) {
         const response = await this.callEndpoints(
           this.axios,
           'put',
           `/config/${this.id}`,
           localStorage.token,
-          this.lock
+          this.settings
         );
 
         if (response?.error) {
@@ -88,39 +84,6 @@ export default {
         }
       }
     },
-    async mounted() {
-      //Get a list of user to avoid repetition.
-      const r = await this.callEndpoints(
-        this.axios,
-        'get',
-        '/locks/all?limit=20&offset=0',
-        localStorage.token
-      );
-
-      if (r?.error?.status === 401) {
-        this.$router.push({ name: 'locks' });
-      }
-      else {
-        this.usersUsed = r.data.map(l => l.userNumber);
-      }
-
-      if (this.id && this.$route.name === 'lock-detail-edit') {
-        const response = await this.callEndpoints(
-          this.axios,
-          'get',
-          `/locks/${this.id}`,
-          localStorage.token
-        );
-
-        this.lock = {...response.data};
-        if (response?.error?.status === 401) {
-          this.$router.push({ name: 'locks' });
-        }
-        else {
-          this.lock = {...response.data};
-        }
-      }
-    }
   },
   async mounted() {
     const response = await this.callEndpoints(
