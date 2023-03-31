@@ -2,17 +2,16 @@
   <PageLayout>
     <template #header v-if="currentUser">
       <HeaderLayout :uid="currentUser.id"></HeaderLayout>
-    </template>
-    <template #body>
-      <div
-        v-show="message.show"
+      <div v-show="message.text"
         :class="{
           'bg-lime-300': true,
-          'p-4 m-8': true,
+          'p-4 my-8': true,
           [message.type]: true
         }">
-        {{ message.text }}
+        {{ message }}
       </div>
+    </template>
+    <template #body>
       <div class="container mx-auto px-4">
         <router-view ></router-view>
       </div>
@@ -33,6 +32,11 @@ import FooterLayout from '@/components/layouts/FooterLayout.vue';
       PageLayout,
       HeaderLayout,
       FooterLayout,
+    },
+    data() {
+      return {
+        settings: {}
+      }
     },
     computed: {
       currentUser() {
@@ -66,6 +70,23 @@ import FooterLayout from '@/components/layouts/FooterLayout.vue';
       }
       else {
         const validate = await this.validSession();
+
+          const response = await this.callEndpoints(
+          this.axios,
+          'get',
+          '/config',
+          localStorage.token
+        );
+
+        if (response?.error?.status === 401) {
+          this.$router.push({ name: 'home' });
+        }
+        else {
+          if (response.data[0]) {
+            this.settings = response.data[0];
+          }
+        }
+
         if (!validate) {
           this.logOut();
         }

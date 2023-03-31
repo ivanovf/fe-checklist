@@ -11,36 +11,35 @@
     </router-link>
   </div>
   <div v-else class="mt-8 p-4">
-    <button v-on:click="logOut" class="p-2 mb-4">Logout</button>
     <h3>{{ user.email }}</h3>
     <text-field-vue v-model="user.name" label="Nombre" inputId="name" name="name"/>
     <div v-if="$route.name === 'user-detail-edit'">
       <fieldset>
         <legend
-          class="text-xl py-4 mb-4 font-bold text-left border-b-2 w-full"
-          v-on:click ="changePassword = !changePassword">Cambiar contraseña
+        class="text-xl py-4 mb-4 font-bold text-left border-b-2 w-full"
+        v-on:click ="changePassword = !changePassword">Cambiar contraseña
         </legend>
         <div class="border-2 p-4 rounded-md" v-if="changePassword">
           <text-field-vue
-            v-model="currentPassword"
-            label="Contraseña actual"
-            inputId="currentpassword"
-            name="currentpassword"
-            type="password"/>
+          v-model="currentPassword"
+          label="Contraseña actual"
+          inputId="currentpassword"
+          name="currentpassword"
+          type="password"/>
           <text-field-vue
-            v-model="newPassword"
-            label="Nueva Contraseña"
-            inputId="user-pass-new"
-            name="user-pass-new"
-            type="password"
-            :msg="inputsError?.userPassNew"/>
+          v-model="newPassword"
+          label="Nueva Contraseña"
+          inputId="user-pass-new"
+          name="user-pass-new"
+          type="password"
+          :msg="inputsError?.userPassNew"/>
           <text-field-vue
-            v-model="confirmPassword"
-            label="Confirmar Contraseña"
-            inputId="user-pass-confirm"
-            name="user-pass-confirm"
-            type="password"
-            :msg="inputsError?.userPassConfirm"/>
+          v-model="confirmPassword"
+          label="Confirmar Contraseña"
+          inputId="user-pass-confirm"
+          name="user-pass-confirm"
+          type="password"
+          :msg="inputsError?.userPassConfirm"/>
         </div>
       </fieldset>
     </div>
@@ -58,6 +57,12 @@
       </div>
     </div>
     <button v-on:click="save" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-2">Guardar</button>
+    <button
+      v-if="$route.name === 'user-detail-edit'"
+      v-on:click="logOut"
+      class="p-2 mt-4 border border-gray-200 w-1/2 block">
+      <img src="@/assets/icons/exit.svg" alt="" width="25" class="inline"> Logout
+    </button>
 
   </div>
 </template>

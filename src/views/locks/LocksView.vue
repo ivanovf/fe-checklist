@@ -6,17 +6,8 @@
       v-for="lock in locks" v-bind:key="lock._id">
       <div class="py-2 border-2 rounded-ls border-black-400 w-8 h-8 leading-4 font-bold">{{ lock.userNumber }}</div>
       <div class="grid grid-cols-4 gap-2 w-1/2 mx-auto">
-        <div class="p-2 border-2 rounded-md border-red-400 w-8 h-8 leading-4 font-bold">
-          {{ lock.lock.charAt(0) }}
-        </div>
-        <div class="p-2 border-2 rounded-md border-red-400 w-8 h-8 leading-4 font-bold">
-          {{ lock.lock.charAt(1) }}
-        </div>
-        <div class="p-2 border-2 rounded-md border-red-400 w-8 h-8 leading-4 font-bold">
-          {{ lock.lock.charAt(2) }}
-        </div>
-        <div class="p-2 border-2 rounded-md border-red-400 w-8 h-8 leading-4 font-bold">
-          {{ lock.lock.charAt(3) }}
+        <div v-for="v, i in 4" :key="i" class="p-2 border-2 rounded-md border-red-400 w-8 h-8 leading-4 font-bold">
+          {{ lock.lock.charAt(i) }}
         </div>
       </div>
       <div class="basis-auto flex flex-wrap">

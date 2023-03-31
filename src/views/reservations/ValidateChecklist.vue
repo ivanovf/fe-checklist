@@ -73,12 +73,11 @@ export default {
         }
         else {
           this.reservation = response.data;
+          this.$router.push({ name: 'home' });
         }
       } catch (error) {
         console.log();
       }
-
-      console.log(this.reservation);
     }
   },
   async mounted() {

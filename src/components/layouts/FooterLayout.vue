@@ -12,14 +12,25 @@
         <router-link to="/items" class="bloc-icon">
             <img src="@/assets/icons/items.svg" alt="">
         </router-link>
-        <router-link to="/users" class="bloc-icon">
+        <router-link v-if="role === 'admin'" to="/users" class="bloc-icon">
             <img src="@/assets/icons/users.svg" alt="">
         </router-link>
-        <router-link :to="{ name: 'settings' }" class="bloc-icon">
+        <router-link v-if="role === 'admin'" :to="{ name: 'settings' }" class="bloc-icon">
             <img src="@/assets/icons/settings.svg" alt="">
         </router-link>
     </nav>
 </template>
+<script>
+import { computed } from 'vue'
+
+export default {
+  data() {
+    return {
+      role: computed(() => this.$store.state.currentUser.role)
+    }
+  }
+}
+</script>
 
 <style scoped>
 .mobile-nav {

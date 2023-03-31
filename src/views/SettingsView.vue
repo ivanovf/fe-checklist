@@ -15,9 +15,10 @@
 import TextField from '@/components/fields/TextField.vue'
 export default {
   components: { TextField },
+  inject: ['appSettings'],
   data() {
     return {
-      settings: {},
+      settings: this.appSettings,
       validations: [
         {
           field: 'doorLook',
@@ -47,7 +48,7 @@ export default {
         const response = await this.callEndpoints(
           this.axios,
           'put',
-          `/config/${this.id}`,
+          `/config/${this.settings._id}`,
           localStorage.token,
           this.settings
         );
@@ -85,21 +86,5 @@ export default {
       }
     },
   },
-  async mounted() {
-    const response = await this.callEndpoints(
-      this.axios,
-      'get',
-      '/config',
-      localStorage.token
-    );
-    if (response?.error?.status === 401) {
-      console.log(response.error);
-    }
-    else {
-      if (response.data[0]) {
-        this.settings = response.data[0];
-      }
-    }
-  }
 }
 </script>

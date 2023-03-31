@@ -19,17 +19,8 @@
 
     <h3 class="p-4 text-xl">Clave del candado</h3>
     <div v-if="settings.doorLock" class="grid grid-cols-4 gap-2 w-1/2 mx-auto">
-      <div class="p-2 border-2 rounded-md border-red-400 w-8 h-8 leading-4 font-bold">
-        {{ settings.doorLock.charAt(0) }}
-      </div>
-      <div class="p-2 border-2 rounded-md border-red-400 w-8 h-8 leading-4 font-bold">
-        {{ settings.doorLock.charAt(1) }}
-      </div>
-      <div class="p-2 border-2 rounded-md border-red-400 w-8 h-8 leading-4 font-bold">
-        {{ settings.doorLock.charAt(2) }}
-      </div>
-      <div class="p-2 border-2 rounded-md border-red-400 w-8 h-8 leading-4 font-bold">
-        {{ settings.doorLock.charAt(3) }}
+      <div v-for="v, i in 4" :key="i" class="p-2 border-2 rounded-md border-red-400 w-8 h-8 leading-4 font-bold">
+        {{ settings.doorLock.charAt(i) }}
       </div>
     </div>
   </main>
@@ -39,10 +30,11 @@
 
 export default {
   name: 'HomeView',
+  inject: ['appSettings'],
   data() {
     return {
       reservations: [],
-      settings: {}
+      settings: this.appSettings,
     }
   },
   methods: {
@@ -65,22 +57,6 @@ export default {
     }
     else {
       this.reservations = response.data;
-    }
-
-    response = await this.callEndpoints(
-      this.axios,
-      'get',
-      '/config',
-      localStorage.token
-    );
-    if (response?.error?.status === 401) {
-      this.$router.push({ name: 'home' });
-    }
-    else {
-      this.settings = response.data;
-      if (this.settings[0]) {
-        this.settings = this.settings[0];
-      }
     }
   }
 }

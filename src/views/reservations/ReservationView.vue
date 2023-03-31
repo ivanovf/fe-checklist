@@ -59,6 +59,10 @@
       </li>
     </ul>
     <button v-on:click="save" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Guardar</button>
+    <router-link v-if="reservation.id"
+      :to="{ name: 'reservation-delete', id: reservation.id }" class="ml-4 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+      Eliminar
+    </router-link>
   </div>
 </template>
 <script>
@@ -106,8 +110,6 @@ export default {
   },
   methods: {
     async save() {
-
-      console.log(this.reservation.date);
 
       this.errors = this.validateForm(this.validations, this.reservation);
       if (Object.keys(this.errors).length > 0) {

@@ -20,10 +20,11 @@
       </option>
     </select>
     <div class="grid grid-cols-5 gap-2 w-3/5 mx-auto mb-4">
-      <input type="number" min="0" max="9" v-model="boxes[0]" class="p-2 border-2 rounded-md border-red-400 w-8 h-8 leading-4 font-bold" />
-      <input type="number" min="0" max="9" v-model="boxes[1]" class="p-2 border-2 rounded-md border-red-400 w-8 h-8 leading-4 font-bold" />
-      <input type="number" min="0" max="9" v-model="boxes[2]" class="p-2 border-2 rounded-md border-red-400 w-8 h-8 leading-4 font-bold" />
-      <input type="number" min="0" max="9" v-model="boxes[3]" class="p-2 border-2 rounded-md border-red-400 w-8 h-8 leading-4 font-bold" />
+      <input
+        v-for="v, i in 4" :key="i"
+        type="number" min="0" max="9" v-model="boxes[i]"
+        class="p-2 border-2 rounded-md border-red-400 w-8 h-8 leading-4 font-bold"
+      />
       <button v-on:click="randomLock(9999)" class="p-1 bg-cyan-400 rounded-full ">
         <img src="@/assets/icons/shuffle.svg" alt="random" width="25"/>
       </button>
@@ -37,33 +38,21 @@
 
       <h4 class="text-md p-2 font-bold text-left">Para agregar</h4>
       <div class="grid grid-cols-7 gap-1 place-items-center bg-gray-500 p-2 rounded">
-        <circle-number :num="settings.mainLock.charAt(0)"/>
-        <circle-number :num="settings.mainLock.charAt(1)"/>
-        <circle-number :num="settings.mainLock.charAt(2)"/>
-        <circle-number :num="settings.mainLock.charAt(3)"/>
+        <circle-number v-for="v, i in 4" :key="i" :num="settings.mainLock.charAt(i)"/>
         <img src="@/assets/icons/lock-green.svg" alt="random"/>
         <circle-number num="1"/>
         <img src="@/assets/icons/lock-green.svg" alt="random" width="60"/>
         <circle-number :num="lock.userNumber.charAt(0)"/>
         <circle-number :num="lock.userNumber.charAt(1)"/>
         <img src="@/assets/icons/lock-green.svg" alt="random" width="60"/>
-        <circle-number :num="boxes[0]"/>
-        <circle-number :num="boxes[1]"/>
-        <circle-number :num="boxes[2]"/>
-        <circle-number :num="boxes[3]"/>
+        <circle-number v-for="v, i in 4" :key="i" :num="boxes[i]"/>
         <img src="@/assets/icons/lock-green.svg" alt="random" width="60"/>
-        <circle-number :num="boxes[0]"/>
-        <circle-number :num="boxes[1]"/>
-        <circle-number :num="boxes[2]"/>
-        <circle-number :num="boxes[3]"/>
+        <circle-number v-for="v, i in 4" :key="i" :num="boxes[i]"/>
         <img src="@/assets/icons/lock-green.svg" alt="random" width="60"/>
       </div>
       <h4 class="text-md p-2 font-bold text-left">Para eliminar</h4>
       <div class="grid grid-cols-7 gap-1 place-items-center bg-gray-500 p-2 rounded">
-        <circle-number :num="settings.mainLock.charAt(0)"/>
-        <circle-number :num="settings.mainLock.charAt(1)"/>
-        <circle-number :num="settings.mainLock.charAt(2)"/>
-        <circle-number :num="settings.mainLock.charAt(3)"/>
+        <circle-number v-for="v, i in 4" :key="i" :num="settings.mainLock.charAt(i)"/>
         <img src="@/assets/icons/lock-green.svg" alt="random" width="60"/>
         <circle-number num="2"/>
         <img src="@/assets/icons/lock-green.svg" alt="random" width="60"/>
@@ -73,7 +62,6 @@
         <circle-number :num="lock.userNumber.charAt(0)"/>
         <circle-number :num="lock.userNumber.charAt(1)"/>
         <img src="@/assets/icons/lock-green.svg" alt="random" width="60"/>
-
       </div>
     </div>
   </div>
@@ -81,9 +69,11 @@
 
 <script>
 import CircleNumber from '@/components/atoms/CircleNumber.vue';
+
 export default {
   components: { CircleNumber },
   props:['id'],
+  inject: ['appSettings'],
   data() {
     return {
       lock: {},
@@ -104,18 +94,18 @@ export default {
         },
       ],
       errors: {},
-      settings: {},
+      settings: this.appSettings,
     }
   },
   methods: {
     randomLock(max) {
       const n = Math.floor(Math.random() * max);
-      this.lock.lock = n < 1000 ?
+      const rand = n < 1000 ?
         `0${n}` : n < 100 ?
           `00${n}` : n < 10 ?
             `000${n}` : n;
 
-      this.lock.lock = this.lock.lock.toString();
+      this.lock.lock = rand.toString();
       this.boxes = this.lock.lock.split('').map(Number);
     },
     async deleteLock() {
@@ -231,21 +221,6 @@ export default {
 
       this.boxes = this.lock.lock.split('');
 
-      response = await this.callEndpoints(
-        this.axios,
-        'get',
-        '/config',
-        localStorage.token
-      );
-      if (response?.error?.status === 401) {
-        this.$router.push({ name: 'home' });
-      }
-      else {
-        this.settings = response.data;
-        if (this.settings[0]) {
-          this.settings = this.settings[0];
-        }
-      }
     }
   }
 }
