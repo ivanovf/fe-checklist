@@ -52,7 +52,7 @@ const configResponse = async () => {
         validateForm(validations, object) {
           const messages = {
             required: {
-              text: 'Debes poner algo aquí',
+              text: 'Debes poner algo aquí.',
               type: 'error'
             }
           };
