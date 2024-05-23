@@ -8,7 +8,7 @@
           'p-4 my-8': true,
           [message.type]: true
         }">
-        {{ message }}
+        {{ message.text }}
       </div>
     </template>
     <template #body>
@@ -32,11 +32,6 @@ import FooterLayout from '@/components/layouts/FooterLayout.vue';
       PageLayout,
       HeaderLayout,
       FooterLayout,
-    },
-    data() {
-      return {
-        settings: {}
-      }
     },
     computed: {
       currentUser() {
@@ -70,23 +65,6 @@ import FooterLayout from '@/components/layouts/FooterLayout.vue';
       }
       else {
         const validate = await this.validSession();
-
-          const response = await this.callEndpoints(
-          this.axios,
-          'get',
-          '/config',
-          localStorage.token
-        );
-
-        if (response?.error?.status === 401) {
-          this.$router.push({ name: 'home' });
-        }
-        else {
-          if (response.data[0]) {
-            this.settings = response.data[0];
-          }
-        }
-
         if (!validate) {
           this.logOut();
         }

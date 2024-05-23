@@ -59,7 +59,7 @@
       </li>
     </ul>
     <button v-on:click="save" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Guardar</button>
-    <router-link v-if="reservation.id"
+    <router-link v-if="id"
       :to="{ name: 'reservation-delete', id: reservation.id }" class="ml-4 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
       Eliminar
     </router-link>
@@ -124,7 +124,7 @@ export default {
 
       if (this.$route.name === 'reservation-edit') {
         try {
-          const response = await this.callEndpoints(
+          const { error } = await this.callEndpoints(
             this.axios,
             'put',
             `/reservations/${this.id}`,
@@ -132,8 +132,8 @@ export default {
             this.reservation
           );
 
-          if (response?.error) {
-            console.log(response.error);
+          if (error) {
+            console.log(error);
           }
 
           else {
@@ -143,22 +143,18 @@ export default {
           console.log(error);
         }
       } else {
-        try {
-          const response = await this.callEndpoints(
-            this.axios,
-            'post',
-            '/reservations/',
-            localStorage.token,
-            this.reservation
-          );
+        const { error } = await this.callEndpoints(
+          this.axios,
+          'post',
+          '/reservations/',
+          localStorage.token,
+          this.reservation
+        );
 
-          if (response?.error) {
-            console.log(response.error);
-          } else {
-            this.$router.push({ name: 'reservations' });
-          }
-        } catch (error) {
+        if (error) {
           console.log(error);
+        } else {
+          this.$router.push({ name: 'reservations' });
         }
       }
     },

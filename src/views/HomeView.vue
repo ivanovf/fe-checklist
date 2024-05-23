@@ -46,17 +46,18 @@ export default {
     }
   },
   async mounted() {
-    let response = await this.callEndpoints(
+    let { data, error } = await this.callEndpoints(
       this.axios,
       'get',
       '/reservations/all?sort=asc&old=true&validated=false',
       localStorage.token
     );
-    if (response?.error?.status === 401) {
+    if (error) {
+      console.log(error);
       this.$router.push({ name: 'home' });
     }
     else {
-      this.reservations = response.data;
+      this.reservations = data;
     }
   }
 }

@@ -45,12 +45,12 @@ export default {
     },
   },
   async mounted() {
-    const response = await this.callEndpoints(this.axios, 'get', '/reservations/all?sort=asc', localStorage.token);
-    if (response?.error?.status === 401) {
+    const { error, data } = await this.callEndpoints(this.axios, 'get', '/reservations/all?sort=asc', localStorage.token);
+    if (error) {
       this.$router.push({ name: 'home' });
     }
     else {
-      this.reservations = response.data;
+      this.reservations = data;
     }
   }
 }
