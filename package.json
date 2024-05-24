@@ -6,6 +6,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
+    "start": "serve -s dist",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
@@ -14,6 +15,7 @@
     "axios": "^1.3.3",
     "core-js": "^3.8.3",
     "dotenv": "^16.0.3",
+    "serve": "^14.2.3",
     "vue": "^3.2.13",
     "vue-axios": "^3.5.2",
     "vue-router": "^4.0.3",
@@ -22,11 +24,11 @@
   "devDependencies": {
     "@babel/core": "^7.12.16",
     "@babel/eslint-parser": "^7.12.16",
-    "@vue/cli-service": "~5.0.0",
     "@vue/cli-plugin-babel": "~5.0.0",
     "@vue/cli-plugin-eslint": "~5.0.0",
     "@vue/cli-plugin-router": "~5.0.0",
     "@vue/cli-plugin-unit-jest": "~5.0.0",
+    "@vue/cli-service": "~5.0.0",
     "@vue/test-utils": "^2.0.0-0",
     "@vue/vue3-jest": "^27.0.0-alpha.1",
     "autoprefixer": "^10.4.13",
