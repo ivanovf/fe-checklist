@@ -1,4 +1,4 @@
-
+/* @todo Check this implementation */
 const callEndpoint = async function(axios, method, path, token = null, body = null) {
 
   const baseUrl = process.env.VUE_APP_BE_HOST;
