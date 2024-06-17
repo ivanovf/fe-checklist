@@ -1,5 +1,4 @@
 <template>
-  <h1 class="my-4 p-2 text-xl font-bold">Lista de usuarios</h1>
   <div
     v-for="user in users" v-bind:key="user._id"
     class="flex flex-row p-4 h-24 items-center border-b border-slate-300">

@@ -1,6 +1,5 @@
 <template>
   <div>
-    <h1 class="mt-4 p-2 text-xl font-bold">Todos los elementos</h1>
     <div
       class="m-2 max-w-sm p-4 border-b border-slate-300 locks-center flex flex-wrap"
       v-for="lock in locks" v-bind:key="lock._id">

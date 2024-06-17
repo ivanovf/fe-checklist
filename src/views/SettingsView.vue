@@ -1,7 +1,5 @@
 <template>
   <div class="about">
-    <h1 class="text-3xl my-4">Settings</h1>
-
     <h3 class="text-xl p-2 font-bold text-left border-b-2">Clave Puerta</h3>
     <text-field inputId="door" label="Clave" name="door" v-model="settings.doorLock"></text-field>
     <h3 class="text-xl p-2 font-bold text-left border-b-2">Clave Principal</h3>

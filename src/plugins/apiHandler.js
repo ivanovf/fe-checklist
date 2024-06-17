@@ -2,6 +2,7 @@
 const callEndpoint = async function(axios, method, path, token = null, body = null) {
 
   const baseUrl = process.env.VUE_APP_BE_HOST;
+  const opts = { headers: {'Authorization': `Bearer ${ token }`}};
   let response = {};
 
   if (!path && !token) {
@@ -12,19 +13,19 @@ const callEndpoint = async function(axios, method, path, token = null, body = nu
   try {
     switch (method) {
       case 'get':
-        response = await axios.get(baseUrl + path, { headers: {'Authorization': `Bearer ${ token }`}});
+        response = await axios.get(baseUrl + path, opts);
         break;
 
       case 'post':
-        response = await axios.post(baseUrl + path, body, { headers: {'Authorization': `Bearer ${ token }`}});
+        response = await axios.post(baseUrl + path, body, opts);
         break;
 
       case 'put':
-        response = await axios.put(baseUrl + path, body, { headers: {'Authorization': `Bearer ${ token }`}});
+        response = await axios.put(baseUrl + path, body, opts);
         break;
 
       case 'delete':
-        response = await axios.delete(baseUrl + path, { headers: {'Authorization': `Bearer ${ token }`}});
+        response = await axios.delete(baseUrl + path, opts);
         break;
 
       default:

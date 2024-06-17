@@ -42,7 +42,6 @@ export default {
         this.options = usersUsed;
       }
       else {
-        console.log(usersUsed);
         for (let i = 1; i <= 20; i++) {
           let val = i < 10 ? `0${i}`: i;
           if (!usersUsed.includes(val)) {

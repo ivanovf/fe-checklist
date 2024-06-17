@@ -1,5 +1,4 @@
 <template>
-  <h1 class="mt-4 p-2 text-xl font-bold">Reservas</h1>
   <div class="m-6 max-w-sm grid grid-cols-3 gap-4 border-b border-slate-300"
     v-for="r in reservations" v-bind:key="r._id">
     <div>

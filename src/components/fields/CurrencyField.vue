@@ -7,6 +7,7 @@
       ref="inputRef"
       :value="modelValue"
       :class="classes"
+      @change="value = $event"
     />
     <div class="msg" v-if="msg && msg.type">
       <p v-if="msg.type === 'error'" class="mt-2 text-sm text-red-600 dark:text-red-500">{{ msg.text }}</p>
@@ -17,6 +18,7 @@
 
 <script>
 import { useCurrencyInput } from 'vue-currency-input'
+import { watch } from 'vue'
 
 export default {
   props: {
@@ -35,7 +37,14 @@ export default {
     msg: Object,
   },
   setup(props) {
-    const { inputRef } = useCurrencyInput(props.options)
+    const { inputRef, setValue } = useCurrencyInput(props.options)
+
+    watch(
+      () => props.modelValue, // Vue 2: props.value
+      (value) => {
+        setValue(value)
+      }
+    )
 
     return { inputRef }
   },

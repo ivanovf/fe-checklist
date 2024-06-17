@@ -19,11 +19,17 @@ const store = new createStore({
 })
 
 const configResponse = async () => {
-  const response = await apiHandler(axios, 'get', '/config', localStorage.token)
-  if (response?.error) {
+  try {
+    if (!localStorage.token) {
+      return {}
+    }
+
+    const response = await apiHandler(axios, 'get', '/config', localStorage.token)
+    return response?.error ? {} : response.data[0]
+  }
+  catch (e) {
     return {}
   }
-  return response.data[0]
 }
 
 (async () => {

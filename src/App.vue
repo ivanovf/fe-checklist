@@ -1,7 +1,7 @@
 <template>
   <PageLayout>
     <template #header v-if="currentUser">
-      <HeaderLayout :uid="currentUser.id"></HeaderLayout>
+      <HeaderLayout :uid="currentUser.id" :role="currentUser.role"></HeaderLayout>
       <div v-show="message.text"
         :class="{
           'bg-lime-300': true,
