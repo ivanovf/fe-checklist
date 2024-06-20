@@ -23,7 +23,7 @@
       <VueDatePicker
         v-model="reservation.date"
         range
-        format="Y-m-d"
+        format="dd-MM-yyyy"
       ></VueDatePicker>
       <p
         v-if="errors?.date"

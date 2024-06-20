@@ -20,7 +20,7 @@
     />
     <VueDatePicker
         v-model="activity.date"
-        format="Y-m-d"
+        format="dd-MM-yyyy"
       ></VueDatePicker>
 
     <CurrencyField
@@ -38,6 +38,15 @@
       v-model="activity.description"
       :msg="errors.description">
     </text-area-field>
+
+    <SelectBoxField
+      name="activityStatus"
+      label="Estado"
+      v-model="activity.status"
+      inputId="activityStatus"
+      :options="statusOptions"
+    />
+
     <button v-on:click="save" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Guardar</button>
 
   </div>
@@ -56,12 +65,16 @@ export default {
   data() {
     return {
       activity: {
-        status: false,
-        date: '',
+        status: 'TODO',
+        date: new Date(),
         price: 0,
         type: '',
       },
-      typeOptions: [],
+      typeOptions: [{ label: '-- Seleccionar --', value: ''}],
+      statusOptions: [
+        { label: 'Completada', value: 'COMPLETED' },
+        { label: 'Por hacer', value: 'TODO' }
+      ],
       validations: [
         {
           field: 'date',
@@ -71,6 +84,12 @@ export default {
         },
         {
           field: 'price',
+          rules: [
+            { required: true }
+          ]
+        },
+        {
+          field: 'type',
           rules: [
             { required: true }
           ]
@@ -165,12 +184,12 @@ export default {
       this.$router.push({ name: 'activities' });
     }
     else {
-      this.typeOptions = response.data.map((item) => {
+      this.typeOptions.push(...response.data.map((item) => {
         return {
           label: item.name,
           value: item._id
         }
-      });
+      }));
     }
 
     if (this.id && this.$route.name === 'activity-detail-edit') {

@@ -41,7 +41,7 @@ const configResponse = async () => {
     .mixin({
       data() {
         return {
-          months: [
+          esMonths: [
             'Enero',
             'Febrero',
             'Marzo',
@@ -96,7 +96,7 @@ const configResponse = async () => {
         },
         getMonth(eventDate) {
           const newDate = new Date(eventDate);
-          return this.months[newDate.getMonth()];
+          return this.esMonths[newDate.getMonth()];
         },
       }
     })
