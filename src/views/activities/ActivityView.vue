@@ -1,4 +1,10 @@
 <template>
+  <div class="flex border-b border-gray-200 my-4">
+    <router-link :to="{ name: 'activities' }"
+      class="inline-block p-4 rounded-t-lg text-blue-600 bg-gray-100 active dark:bg-gray-800 dark:text-blue-500">
+      Eventos
+    </router-link>
+  </div>
   <div v-if="$route.name === 'activity-detail-delete'">
     <h2>¿Esta seguro de eliminar el evento?</h2>
     <button

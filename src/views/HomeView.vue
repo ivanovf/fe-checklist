@@ -17,6 +17,22 @@
       </router-link>
     </div>
 
+    <p v-if="!activities" class="my-4 p-2 text-xl font-bold">
+      No hay actividades pendientes
+    </p>
+    <p v-else class="my-4 p-2 text-xl font-bold">
+      Actividades por completar
+    </p>
+    <div v-for="a in activities" v-bind:key="a._id">
+      <router-link
+        :to="{ name: 'activity-detail-edit', params: {id: a._id } }"
+        class="block shadow rounded-md p-3 bg-gray-100 my-2">
+        <p class="text-md">
+          <span class="text-xl font-bold italic">$</span> {{ a.type.name }}
+        </p>
+      </router-link>
+    </div>
+
     <h3 class="p-4 text-xl">Clave del candado</h3>
     <div v-if="settings.doorLock" class="grid grid-cols-4 gap-2 w-1/2 mx-auto">
       <div v-for="v, i in 4" :key="i" class="p-2 border-2 rounded-md border-red-400 w-8 h-8 leading-4 font-bold">
@@ -34,6 +50,7 @@ export default {
   data() {
     return {
       reservations: [],
+      activities: [],
       settings: this.appSettings,
     }
   },
@@ -46,19 +63,28 @@ export default {
     }
   },
   async mounted() {
-    let { data, error } = await this.callEndpoints(
+    let response = await this.callEndpoints(
       this.axios,
       'get',
       '/reservations/all?sort=asc&old=true&validated=false',
       localStorage.token
     );
-    if (error) {
-      console.log(error);
-      this.$router.push({ name: 'home' });
+
+    if (response?.data) {
+      this.reservations = response.data;
     }
-    else {
-      this.reservations = data;
+
+    response = await this.callEndpoints(
+      this.axios,
+      'get',
+      '/activity?status=TODO',
+      localStorage.token
+    );
+
+    if (response?.data) {
+      this.activities = response.data;
     }
+
   }
 }
 </script>
