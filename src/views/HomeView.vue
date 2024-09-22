@@ -39,6 +39,13 @@
         {{ settings.doorLock.charAt(i) }}
       </div>
     </div>
+    <h3 class="my-4 p-2 text-xl font-bold">Estado de tanques</h3>
+    <div class="tank-container flex flex-wrap">
+      <div class="tank">
+        <div class="fill" :style="{ height: fillHeight }"></div>
+      </div>
+      <div class="percentage">{{ calculateTankFullness.toFixed(2) }}%</div>
+    </div>
   </main>
 </template>
 
@@ -60,6 +67,26 @@ export default {
       const month = new Intl.DateTimeFormat('es-ES', { month: 'long'}).format(date);
       const lastPart = month.slice(1);
       return `${date.getDate()} de ${month.charAt(0).toUpperCase() + lastPart }`;
+    },
+  },
+  computed: {
+    calculateTankFullness() {
+      const sensorReading = this.settings.analogLecture;
+      const S_min = 600;  // Minimum sensor reading (empty tank)
+      const S_max = 1600; // Maximum sensor reading (full tank)
+      const P_min = 2;    // Percentage at minimum reading
+      const P_max = 100;  // Percentage at maximum reading
+
+      // Check if the sensor reading is within the valid range
+      if (sensorReading < S_min || sensorReading > S_max) {
+        return 'No range -> ' + sensorReading;
+      }
+
+      const P = ((sensorReading - S_min) / (S_max - S_min)) * (P_max - P_min) + P_min;
+      return P;
+    },
+    fillHeight() {
+      return this.calculateTankFullness + '%'; // Set the fill height based on percentage
     }
   },
   async mounted() {
@@ -88,3 +115,31 @@ export default {
   }
 }
 </script>
+<style scoped>
+.tank-container {
+  text-align: center;
+}
+
+.tank {
+  width: 150px;
+  height: 180px;
+  position: relative;
+  background-color: #e0e0e0;
+  clip-path: polygon(10% 100%, 0% 0%, 100% 0%, 90% 100%);
+}
+
+.fill {
+  background-color: dodgerblue; /* Color of the filled portion */
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  transition: height 0.5s ease; /* Smooth transition for filling effect */
+}
+
+.percentage {
+  margin-top: 10px;
+  font-size: 24px;
+  font-weight: bold;
+}
+</style>
