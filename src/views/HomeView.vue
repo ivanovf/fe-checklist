@@ -40,11 +40,11 @@
       </div>
     </div>
     <h3 class="my-4 p-2 text-xl font-bold">Estado de tanques</h3>
-    <div class="tank-container flex flex-wrap">
+    <div class="tank-container grid grid-cols-2 gap-4 m-4 p-4 rounded bg-cyan-50">
       <div class="tank">
         <div class="fill" :style="{ height: fillHeight }"></div>
       </div>
-      <div class="percentage">{{ calculateTankFullness.toFixed(2) }}%</div>
+      <div class="percentage">{{ calculateTankFullness.toFixed(1) }}%</div>
     </div>
   </main>
 </template>
@@ -138,8 +138,8 @@ export default {
 }
 
 .percentage {
-  margin-top: 10px;
-  font-size: 24px;
-  font-weight: bold;
+  margin-top: 80px;
+  font-size: 32px;
+  font-weight: 800;
 }
 </style>
