@@ -73,13 +73,16 @@ export default {
     calculateTankFullness() {
       const sensorReading = this.settings.analogLecture;
       const S_min = 600;  // Minimum sensor reading (empty tank)
-      const S_max = 1950; // Maximum sensor reading (full tank)
+      const S_max = 1900; // Maximum sensor reading (full tank)
       const P_min = 0;    // Percentage at minimum reading
       const P_max = 100;  // Percentage at maximum reading
 
       // Check if the sensor reading is within the valid range
-      if (sensorReading < S_min || sensorReading > S_max) {
+      if (sensorReading < S_min) {
         return 'No range -> ' + sensorReading;
+      }
+      if (sensorReading > S_max) {
+        return 100;
       }
 
       const P = ((sensorReading - S_min) / (S_max - S_min)) * (P_max - P_min) + P_min;
