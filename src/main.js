@@ -51,6 +51,7 @@ const configResponse = async () => {
             'Julio',
             'Agosto',
             'Septiembre',
+            'Octubre',
             'Noviembre',
             'Diciembre'
           ],
