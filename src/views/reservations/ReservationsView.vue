@@ -1,4 +1,36 @@
 <template>
+  <div id="filters" class="flex flex-wrap justify-between p-6 border border-slate-300 rounded-md m-2">
+    <h2 class="text-md font-bold">Filtrar</h2>
+    <div class="flex flex-wrap">
+      <div class="flex items-center mb-4">
+        <label for="sort" class="text-sm mr-2">Ordenar:</label>
+        <select id="sort" class="mr-2 ml-2 border border-slate-300 rounded-md p-1 text-sm" v-model="sort">
+          <option value="asc">Ascendente</option>
+          <option value="desc">Descendente</option>
+        </select>
+        <label for="type" class="mr-2 text-sm">Tipo:</label>
+        <select id="type" class="border border-slate-300 rounded-md p-1 text-sm" v-model="type">
+          <option value="all">Todos</option>
+          <option value="airbnb">AirBnB</option>
+          <option value="booking">Booking</option>
+          <option value="direct">Directo</option>
+        </select>
+      </div>
+
+      <div id="by-date" class="flex items-center mb-4">
+        <label for="date" class="mr-2 text-sm">Desde</label>
+        <input type="date" id="date-ini" class="mr-2 border border-slate-300 rounded-md p-1 text-sm" v-model="dateIni">
+        <label for="date-end" class="mr-2 mr-2">a</label>
+        <input type="date" id="date-end" class="mr-2 border border-slate-300 rounded-md p-1 text-sm" v-model="dateEnd">
+      </div>
+      <div class="flex items-center ml-4">
+        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="filter">
+          Buscar
+        </button>
+      </div>
+    </div>
+  </div>
+
   <div class="m-6 max-w-sm grid grid-cols-3 gap-4 border-b border-slate-300"
     v-for="r in reservations" v-bind:key="r._id">
     <div>
@@ -36,21 +68,38 @@ export default {
   data() {
     return {
       reservations: [],
+      sort: 'asc',
+      type: 'all',
+      dateIni: '',
+      dateEnd: ''
     }
   },
   methods: {
     getImageUrl(filename) {
       return require(`@/assets/logos/${filename}.svg`)
     },
+    filter() {
+      this.getReservations();
+    },
+    async getReservations() {
+
+      let url = `/reservations/all?sort=${this.sort}&dateIni=${this.dateIni}&dateEnd=${this.dateEnd}`;
+
+      if (this.type !== 'all') {
+        url += `&type=${this.type}`;
+      }
+
+      const { error, data } = await this.callEndpoints(this.axios, 'get', url, localStorage.token);
+      if (error) {
+        this.$router.push({ name: 'home' });
+      }
+      else {
+        this.reservations = data;
+      }
+    },
   },
   async mounted() {
-    const { error, data } = await this.callEndpoints(this.axios, 'get', '/reservations/all?sort=asc', localStorage.token);
-    if (error) {
-      this.$router.push({ name: 'home' });
-    }
-    else {
-      this.reservations = data;
-    }
+    this.getReservations();
   }
 }
 </script>

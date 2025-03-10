@@ -100,6 +100,17 @@
         />
         <label for="user-status-2" class="font-bold w-full">Booking</label>
       </div>
+      <div class="text-left my-4">
+        <input
+          type="radio"
+          name="role"
+          id="user-status-3"
+          class="mr-2"
+          value="direct"
+          v-model="reservation.type"
+        />
+        <label for="user-status-3" class="font-bold w-full">Directo</label>
+      </div>
       <p
         v-if="errors?.type"
         class="mt-2 text-sm text-red-600 dark:text-red-500"
