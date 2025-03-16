@@ -15,19 +15,21 @@
           <option value="booking">Booking</option>
           <option value="direct">Directo</option>
         </select>
+        <label for="validated" class="mr-2 ml-2 text-sm">Validada:</label>
+        <input type="checkbox" id="validated" class="mr-2 border border-slate-300 rounded-md p-1 text-sm" v-model="validated">
       </div>
 
       <div id="by-date" class="flex items-center mb-4">
         <label for="date" class="mr-2 text-sm">Desde</label>
-        <input type="date" id="date-ini" class="mr-2 border border-slate-300 rounded-md p-1 text-sm" v-model="dateIni">
+        <input type="date" id="date-ini" class="mr-2 border border-slate-300 rounded-md p-1 text-sm" v-model="dateFrom">
         <label for="date-end" class="mr-2 mr-2">a</label>
-        <input type="date" id="date-end" class="mr-2 border border-slate-300 rounded-md p-1 text-sm" v-model="dateEnd">
+        <input type="date" id="date-end" class="mr-2 border border-slate-300 rounded-md p-1 text-sm" v-model="dateTo">
       </div>
-      <div class="flex items-center ml-4">
-        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="filter">
-          Buscar
-        </button>
-      </div>
+    </div>
+    <div class="flex items-center ml-4">
+      <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="filter">
+        Buscar
+      </button>
     </div>
   </div>
 
@@ -70,8 +72,9 @@ export default {
       reservations: [],
       sort: 'asc',
       type: 'all',
-      dateIni: '',
-      dateEnd: ''
+      dateFrom: '',
+      dateTo: '',
+      validated: false
     }
   },
   methods: {
@@ -79,27 +82,34 @@ export default {
       return require(`@/assets/logos/${filename}.svg`)
     },
     filter() {
-      this.getReservations();
+      this.getReservations(false);
     },
-    async getReservations() {
+    async getReservations(initial = false) {
+      let url = `/reservations/all`;
 
-      let url = `/reservations/all?sort=${this.sort}&dateIni=${this.dateIni}&dateEnd=${this.dateEnd}`;
+      if (!initial) {
+        const params = new URLSearchParams();
 
-      if (this.type !== 'all') {
-        url += `&type=${this.type}`;
+        if (this.dateFrom) params.append('dateFrom', this.dateFrom);
+        if (this.dateTo) params.append('dateTo', this.dateTo);
+        if (this.sort !== 'asc') params.append('sort', this.sort);
+        if (this.type !== 'all') params.append('type', this.type);
+
+        if (this.validated) params.append('validated', this.validated);
+
+        url += `?${params.toString()}`;
       }
 
       const { error, data } = await this.callEndpoints(this.axios, 'get', url, localStorage.token);
       if (error) {
         this.$router.push({ name: 'home' });
-      }
-      else {
+      } else {
         this.reservations = data;
       }
     },
   },
   async mounted() {
-    this.getReservations();
+    this.getReservations(true);
   }
 }
 </script>
